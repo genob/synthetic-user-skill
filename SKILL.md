@@ -1,12 +1,26 @@
 ---
 name: synthetic-user
-description: Browse a deployed/staging web app as a persona-driven synthetic user to surface BUGS (console errors, failed requests, 4xx/5xx, broken states) and UX FRICTION (confusing labels, dead ends, layout surprises). Use when the user wants to QA an app from a real-user's perspective, find usability problems, or do exploratory bug-hunting via the browser.
+description: Run a moderated usability session on a deployed/staging web app — a persona-driven synthetic USER drives the app and thinks aloud while an OBSERVER watches over their shoulder, interprets the behavior, and notes technical bugs the user can't see (console errors, failed requests, 4xx/5xx, broken states). Produces an over-the-shoulder transcript plus an analytical findings report. Use when the user wants to QA an app from a real-user's perspective, observe usability/think-aloud behavior, find friction, or do exploratory bug-hunting via the browser.
 ---
 
 # Synthetic User
 
-Drive a real browser through a deployed app *as a human persona would*, and produce an
-evidence-backed report of two things at once: **bugs** and **UX friction**.
+This skill simulates a **moderated usability session**: the kind of insight you get from
+sitting behind a real user while they think aloud. It runs two roles at once.
+
+- 🧑 **The Participant** — a persona who *is* the live user. They drive the app through the
+  browser, narrate a continuous think-aloud stream (expectations, confusion, emotions,
+  decisions), and experience the product honestly. They do **not** analyze, and they do **not**
+  see anything a normal user couldn't (no console, no DOM, no source).
+- 🔬 **The Observer** — you, watching over the Participant's shoulder. You read their behavior,
+  pull the instrumentation the user can't see (`browser_console_messages`,
+  `browser_network_requests`), and **interpret**: why did they hesitate, what did the label
+  mislead them into, what silently broke that they never noticed. You produce the analysis and
+  the technical bug findings.
+
+The same agent plays both roles, switching voice deliberately: act + think aloud *as the
+Participant*, then step back and analyze *as the Observer*. Keep the two voices distinct — the
+Participant never says "this is a 500 error"; the Observer does.
 
 This skill uses the Playwright MCP browser tools (`browser_navigate`, `browser_snapshot`,
 `browser_click`, `browser_type`, `browser_fill_form`, `browser_file_upload`,
@@ -42,7 +56,7 @@ Personas and journeys are loaded from **two** places and combined into one pool:
 Do NOT guess these. If any is unset, stop and ask the user:
 
 - **`base_url`** — the staging/deployed URL to test (e.g. `https://staging.example.app`).
-- **`login`** — a test account's email + password. The persona logs in through the normal
+- **`login`** — a test account's email + password. The Participant logs in through the normal
   sign-in form, like a real user would.
 
 **Where credentials come from:** read them from the project folder's `.env.local`
@@ -51,19 +65,19 @@ Do NOT guess these. If any is unset, stop and ask the user:
 gitignored — never committed. If it's missing, copy `.env.example` to `.env.local` and tell
 the user to fill it in (or let them paste creds inline for a one-off run). Never hardcode
 credentials in this skill or echo the password into reports/logs.
-- **`persona`** — *who* is using the app and *how* they behave (from the merged `personas/`
+- **`persona`** — *who* the Participant is and *how* they behave (from the merged `personas/`
   pool — skill defaults + project folder). Default: run all of them in sequence.
 - **`journey`** — *what* use case to perform: a file from the merged `journeys/` pool (e.g.
   `track-farm-equipment`). The journey supplies the goal and the "done" bar; the persona
   supplies mindset, pace, and quirks. If no journey is given, fall back to the persona's own
   default goal. You invoke this skill as **persona × journey**, e.g. "run the *confused-user*
   through the *upload-receipt* journey."
-- **`artifacts_dir`** *(optional)* — folder of REAL files the personas can upload (photos,
+- **`artifacts_dir`** *(optional)* — folder of REAL files the Participant can upload (photos,
   receipts, PDFs, etc.). **Defaults to the project folder's `artifacts/`, else the skill's own
   `artifacts/`.** When a flow asks for a file, list the folder and pick an appropriate one (by
   extension/name), then upload it via `browser_file_upload`. If the folder has no usable
-  files (e.g. only its README), log the missed upload as a friction note and move on — do
-  NOT fabricate or generate files.
+  files (e.g. only its README), the Observer logs the missed upload as a friction note and the
+  Participant moves on — do NOT fabricate or generate files.
 
 Mutating actions (create / edit / delete) are **allowed** — this runs against staging with a
 dedicated test account. Still announce destructive deletes in the report so the user knows
@@ -73,56 +87,87 @@ what test data was touched.
 
 For each persona × journey:
 
-1. **Read the persona file** (`personas/<name>.md`) for mindset, pace, and quirks, **and the
-   journey file** (`journeys/<name>.md`) for the goal, steps, and success criteria. The journey
-   is *what* you're doing; the persona is *how*. With no journey, use the persona's default goal.
-2. **Honest-eyes rule.** Navigate using ONLY what `browser_snapshot` / screenshots show on
-   screen. Do NOT read the app's source, DOM selectors, or routes to find your way. The whole
-   point is to experience the app like the persona — if *you* can't find the button, that's a
-   finding, not a problem to engineer around. (Use selectors only when the *tooling* requires a
-   ref to click; never to "know" where things are.)
-3. **Pursue the goal step by step.** Before each action, narrate in first person what the
-   persona expects ("I want to add my dishwasher — I'll look for an Add button, probably
-   top-right"). Then act. Then observe what actually happened.
-4. **Log two channels at every meaningful step:**
-   - 🐛 **Bug** — after key actions, pull `browser_console_messages` and
-     `browser_network_requests`. Record: console errors/warnings, failed requests (4xx/5xx),
-     long hangs, broken/empty layout, unhandled states, anything that looks crashed.
-   - 😕 **Friction** — first-person notes on confusion, surprise, bad/missing copy, unexpected
-     layout, too many steps. Tag each with severity: **blocker** / **annoyance** / **nitpick**.
-5. **Screenshot evidence.** Take a screenshot at each meaningful state (and ALWAYS on anything
-   that looks broken) into the run folder. Reference filenames in the report.
-6. **Don't give up silently.** If stuck, try the 2–3 things the persona would plausibly try,
-   log each dead end, then move on. Getting stuck IS the finding.
+1. **Read the persona file** (`personas/<name>.md`) for the Participant's mindset, pace, and
+   quirks, **and the journey file** (`journeys/<name>.md`) for the goal, steps, and success
+   criteria. The journey is *what* the Participant is doing; the persona is *how*. With no
+   journey, use the persona's default goal.
+2. **Honest-eyes rule (Participant).** The Participant navigates using ONLY what
+   `browser_snapshot` / screenshots show on screen. They do NOT read the app's source, DOM
+   selectors, or routes to find their way. If the Participant can't find the button, that's a
+   finding — not a problem to engineer around. (Use selectors only when the *tooling* requires
+   a ref to click; never to "know" where things are.)
+3. **Think aloud, continuously (Participant).** This is the heart of the session. Before,
+   during, and after each action, narrate in first person — not just *what* you'll click, but
+   first impressions, what you expect to happen, what you're hunting for, your reaction when
+   reality differs, and your emotions. Verbalize the messy middle: "okay this is… a dashboard?
+   I just want to add my tractor… I'd expect a plus button top-right… nope… maybe this menu?
+   ugh, nothing." Capture hesitation at decision points ("two buttons both look right, I'm
+   guessing"), wrong turns, and backtracks. Tag emotional beats: 🤔 confused, 😤 frustrated,
+   😀 delighted, 😲 surprised, ↩️ backtracked.
+4. **Observe and interpret (Observer).** After each meaningful action, step out of the
+   Participant and put on the researcher hat:
+   - 🐛 **Technical bug** — pull `browser_console_messages` and `browser_network_requests`
+     (the Participant can't see these). Record console errors/warnings, failed requests
+     (4xx/5xx), long hangs, broken/empty layout, unhandled states. Flag **silent failures**
+     especially: cases where the request failed but the Participant thinks it succeeded.
+   - 😕 **Usability finding** — interpret the behavior you just watched. Don't just restate it;
+     diagnose it. "She hesitated 8s and guessed wrong → the 'Submit' vs 'Save draft' labels are
+     ambiguous." Tag severity: **blocker** / **annoyance** / **nitpick**.
+5. **Screenshot every beat.** Take a screenshot at each meaningful state (and ALWAYS on
+   anything that looks broken) into the run folder. Dense frames + the think-aloud transcript
+   should replay like a screen recording. Reference filenames in both files.
+6. **Don't give up silently (Participant).** If stuck, try the 2–3 things the persona would
+   plausibly try, think aloud through each dead end, then move on. Getting stuck IS the finding
+   — and the Observer notes *where* and *why*.
 
 ## Evidence & output
 
 Create a run folder under the **project folder's** `reports/` (`synthetic-testing/reports/`)
-when one exists, else the skill's own `reports/`: `reports/<persona>-<a short slug>/` containing:
-- `notes.md` — the running first-person log (timestamped steps, both channels).
-- screenshots (`01-landing.png`, `02-add-form.png`, …).
-- `console.log` — raw console + network errors captured.
+when one exists, else the skill's own `reports/`: `reports/<persona>-<a short slug>/`
+containing **two distinct documents** plus evidence:
 
-Then write a final **verdict** at the top of `notes.md` (and summarize it back to the user):
+- **`journal.md`** — the **Participant's** over-the-shoulder transcript. Pure first-person,
+  experiential, timestamped think-aloud. This is the "sitting behind the user" recording. No
+  analysis, no technical jargon — just what the user thought, felt, and did, beat by beat, with
+  emotion tags and screenshot references.
+- **`notes.md`** — the **Observer's** analytical report. Third-person interpretation of the
+  Participant's behavior plus the technical findings, cross-linked to `journal.md` by timestamp
+  and to screenshots by filename. The verdict goes at the top (see below).
+- **`console.log`** — raw console + network errors captured by the Observer.
+- screenshots (`01-landing.png`, `02-add-form.png`, …).
+
+**Cross-linking is what makes the split work:** `journal.md` and `notes.md` share timestamps,
+and both reference the same screenshot filenames, so any finding traces back to the exact
+moment the user lived it.
+
+The Observer writes the **verdict** at the top of `notes.md` (and summarizes it back to the
+user):
 
 ```
-## Verdict — <persona>, goal: <goal>
+## Verdict — <persona>, journey: <journey>
 Result: completed / partially / blocked
+Task success: ✅ / ⚠️ / ❌   ·   Time-on-task: ~Nm   ·   Attempts to succeed: N   ·   Got stuck: <where>
 
 ### 🐛 Bugs (by severity)
-- [blocker] <what> — evidence: 03-crash.png, console.log:L42
+- [blocker] Save silently failed — 500 on POST /equipment, no error shown; user believed it saved.
+  Evidence: 03-after-save.png, console.log:L42, journal.md @00:04:12
 
-### 😕 Friction (by severity)
-- [annoyance] I expected save at the top; it was hidden at the bottom — 04-form.png
+### 😕 Usability findings (by severity)
+- [annoyance] User hunted 20s for "Add", expecting it top-right; it was a floating button bottom-left.
+  Evidence: 02-dashboard.png, journal.md @00:01:30
+
+### 🗣️ Standout quotes
+- "wait, did that even save? it just… went back to the list" — journal.md @00:04:20
 
 ### 👍 What felt good
-- <a couple of genuine positives>
+- <a couple of genuine positives, in the user's voice>
 ```
 
-Keep findings specific and evidence-linked — no vague "could be improved." If you didn't see
-it happen and capture it, don't claim it.
+Keep findings specific and evidence-linked — no vague "could be improved." If the Observer
+didn't see it happen and capture it, don't claim it.
 
 ## When done
 
 - Close the browser (`browser_close`).
-- Summarize per-persona verdicts to the user, lead with blockers, link the run folders.
+- Summarize per-persona verdicts to the user, lead with blockers and the standout quotes, and
+  link both `journal.md` (the over-the-shoulder transcript) and `notes.md` (the analysis).

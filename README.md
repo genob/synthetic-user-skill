@@ -1,17 +1,17 @@
 # synthetic-user
 
-A [Claude Code](https://claude.com/claude-code) skill that browses a deployed/staging web app **as a persona-driven synthetic user** to surface two things at once:
+A [Claude Code](https://claude.com/claude-code) skill that runs a **moderated usability session** on a deployed/staging web app — the closest thing to sitting behind a real user while they think aloud. It runs two roles at once:
 
-- 🐛 **Bugs** — console errors, failed requests (4xx/5xx), broken/empty states, hangs.
-- 😕 **UX friction** — confusing labels, dead ends, layout surprises, too many steps.
+- 🧑 **The Participant** — a persona who *is* the live user. Drives the app, thinks aloud continuously (expectations, confusion, emotions, decisions), and experiences the product honestly. Sees only what a real user sees — no console, no source.
+- 🔬 **The Observer** — the researcher watching over the Participant's shoulder. Reads their behavior, pulls the instrumentation the user can't see (console errors, failed requests, 4xx/5xx), and **interprets**: why they hesitated, what a label misled them into, what silently broke that they never noticed.
 
-It drives a real browser (via the Playwright MCP tools) through the app the way a human would, then produces an evidence-backed report with screenshots, console/network logs, and a per-persona verdict.
+It drives a real browser (via the Playwright MCP tools) and produces two artifacts: an **over-the-shoulder transcript** (`journal.md`, the Participant's voice) and an **analytical findings report** (`notes.md`, the Observer's voice) — cross-linked by timestamp and screenshot.
 
 ## How it works
 
 You invoke the skill as **persona × journey** — e.g. "run the *confused-user* through the *upload-receipt* journey." The journey supplies the goal and the "done" bar; the persona supplies mindset, pace, and quirks.
 
-A key rule is the **honest-eyes rule**: navigation uses only what's visible on screen (snapshots/screenshots), never the app's source or routes. If the synthetic user can't find the button, that's a finding — not a problem to engineer around.
+A key rule is the **honest-eyes rule**: the Participant navigates using only what's visible on screen (snapshots/screenshots), never the app's source or routes. If they can't find the button, that's a finding — not a problem to engineer around. Meanwhile the Observer catches what the Participant *can't*: silent failures, technical bugs, and patterns across the user's hesitations.
 
 ## Layout
 
@@ -47,4 +47,11 @@ On a name collision, the **project folder wins**. Credentials, artifacts, and re
 
 ## Output
 
-Each run writes `reports/<persona>-<slug>/` containing `notes.md` (first-person timestamped log), screenshots, and `console.log`. The top of `notes.md` carries a **verdict**: result (completed / partial / blocked), bugs by severity, friction by severity, and what felt good.
+Each run writes `reports/<persona>-<slug>/` containing:
+
+- **`journal.md`** — the Participant's over-the-shoulder transcript: pure first-person, timestamped think-aloud with emotion tags (🤔 😤 😀 😲 ↩️). Reads like sitting behind the user.
+- **`notes.md`** — the Observer's analytical report. The top carries a **verdict**: task success, time-on-task, attempts, where they got stuck, bugs by severity, usability findings by severity, standout quotes, and what felt good.
+- **`console.log`** — raw console + network errors.
+- screenshots (`01-landing.png`, …) — a dense frame at every beat, so journal + screenshots replay like a recording.
+
+`journal.md` and `notes.md` share timestamps and reference the same screenshot filenames, so any finding traces back to the exact moment the user lived it.
