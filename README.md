@@ -55,3 +55,34 @@ Each run writes `reports/<persona>-<slug>/` containing:
 - screenshots (`01-landing.png`, …) — a dense frame at every beat, so journal + screenshots replay like a recording.
 
 `user-journal.md` and `observer-notes.md` share timestamps and reference the same screenshot filenames, so any finding traces back to the exact moment the user lived it.
+
+
+## Example invocations
+
+Invoke in natural language — name a **persona**, a **journey**, or both. A few to show the range:
+
+**Persona × journey (the core form)**
+- "Run the **new-user** through the **track-farm-equipment** journey on staging."
+- "Send the **confused-user** through **upload-receipt** and see what breaks."
+- "Have the **power-user** do a batch session — add a few assets, attach a file, edit, search, delete a test item."
+
+**First-impression / onboarding check**
+- "Be a brand-new user seeing this app for the first time — can you figure out what to do and add your first thing?"
+- "Watch a first-time user try to reach their first 'aha' moment and tell me where they stall."
+
+**Bug & edge hunting**
+- "Take the **confused-user** persona and try to break the create-reminder flow — messy input, back button, double-clicks."
+- "Exploratory bug hunt: run all the experiential personas and surface any console errors, 4xx/5xx, or silent failures."
+
+**Expert reviews**
+- "Run the **qa-analyst** over the checkout flow and give me defects with repro steps and severity."
+- "Have the **ux-evaluator** do a heuristic evaluation of the dashboard — Nielsen's 10, with severity ratings and suggested fixes."
+
+**Run everyone**
+- "Run **all personas** through the **invite-a-teammate** journey and summarize the blockers across all of them."
+
+**Ad-hoc / no journey**
+- "Just poke around the settings page as an impatient power user and tell me what's annoying."
+- "Here are creds for our preview env — `<url>`, `<email>`/`<pw>`. Walk the signup-to-first-asset flow as a skeptical new user."
+
+In every case you get back the over-the-shoulder transcript (`user-journal.md`), the analytical findings + verdict (`observer-notes.md`), screenshots, and `observer-console.log` — with blockers and standout quotes summarized up front.
