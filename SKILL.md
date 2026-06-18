@@ -103,19 +103,28 @@ For each persona × journey:
    I just want to add my tractor… I'd expect a plus button top-right… nope… maybe this menu?
    ugh, nothing." Capture hesitation at decision points ("two buttons both look right, I'm
    guessing"), wrong turns, and backtracks. Tag emotional beats: 🤔 confused, 😤 frustrated,
-   😀 delighted, 😲 surprised, ↩️ backtracked.
+   😀 delighted, 😲 surprised, ↩️ backtracked. **Screenshot the moment** the persona is
+   reacting to and cite the filename next to the beat (e.g. "I can't find Add — 02-dashboard.png").
 4. **Observe and interpret (Observer).** After each meaningful action, step out of the
-   Participant and put on the researcher hat:
+   Participant and put on the researcher hat. **Every finding cites a screenshot** as its
+   evidence (take a fresh one if the relevant state isn't already captured):
    - 🐛 **Technical bug** — pull `browser_console_messages` and `browser_network_requests`
      (the Participant can't see these). Record console errors/warnings, failed requests
      (4xx/5xx), long hangs, broken/empty layout, unhandled states. Flag **silent failures**
      especially: cases where the request failed but the Participant thinks it succeeded.
+     Evidence: the screenshot of the broken/misleading state + the `observer-console.log` line.
    - 😕 **Usability finding** — interpret the behavior you just watched. Don't just restate it;
      diagnose it. "She hesitated 8s and guessed wrong → the 'Submit' vs 'Save draft' labels are
-     ambiguous." Tag severity: **blocker** / **annoyance** / **nitpick**.
-5. **Screenshot every beat.** Take a screenshot at each meaningful state (and ALWAYS on
-   anything that looks broken) into the run folder. Dense frames + the think-aloud transcript
-   should replay like a screen recording. Reference filenames in both files.
+     ambiguous." Tag severity: **blocker** / **annoyance** / **nitpick**, and cite the screenshot.
+5. **Screenshot every beat — observations are backed by images whenever possible.** Take a
+   screenshot (`browser_take_screenshot`) at each meaningful state, and ALWAYS on anything that
+   looks broken or that any observation refers to. The rule: **if the Participant felt it or the
+   Observer flagged it, there should be an image of it.** Capture it at (or immediately after)
+   the moment, name it in sequence (`01-landing.png`, `02-add-form.png`, …), and reference the
+   filename in whichever document logged the observation. Dense frames + the think-aloud
+   transcript should replay like a screen recording. Only skip a frame when a screenshot is
+   genuinely impossible (e.g. mid-navigation) — note that rather than leaving the claim
+   unbacked.
 6. **Don't give up silently (Participant).** If stuck, try the 2–3 things the persona would
    plausibly try, think aloud through each dead end, then move on. Getting stuck IS the finding
    — and the Observer notes *where* and *why*.
