@@ -5,7 +5,7 @@ A [Claude Code](https://claude.com/claude-code) skill that runs a **moderated us
 - 🧑 **The Participant** — a persona who *is* the live user. Drives the app, thinks aloud continuously (expectations, confusion, emotions, decisions), and experiences the product honestly. Sees only what a real user sees — no console, no source.
 - 🔬 **The Observer** — the researcher watching over the Participant's shoulder. Reads their behavior, pulls the instrumentation the user can't see (console errors, failed requests, 4xx/5xx), and **interprets**: why they hesitated, what a label misled them into, what silently broke that they never noticed.
 
-It drives a real browser (via the Playwright MCP tools) and produces two artifacts: an **over-the-shoulder transcript** (`journal.md`, the Participant's voice) and an **analytical findings report** (`notes.md`, the Observer's voice) — cross-linked by timestamp and screenshot.
+It drives a real browser (via the Playwright MCP tools) and produces two artifacts: an **over-the-shoulder transcript** (`user-journal.md`, the Participant's voice) and an **analytical findings report** (`observer-notes.md`, the Observer's voice) — cross-linked by timestamp and screenshot.
 
 ## How it works
 
@@ -49,9 +49,9 @@ On a name collision, the **project folder wins**. Credentials, artifacts, and re
 
 Each run writes `reports/<persona>-<slug>/` containing:
 
-- **`journal.md`** — the Participant's over-the-shoulder transcript: pure first-person, timestamped think-aloud with emotion tags (🤔 😤 😀 😲 ↩️). Reads like sitting behind the user.
-- **`notes.md`** — the Observer's analytical report. The top carries a **verdict**: task success, time-on-task, attempts, where they got stuck, bugs by severity, usability findings by severity, standout quotes, and what felt good.
-- **`console.log`** — raw console + network errors.
+- **`user-journal.md`** — the Participant's over-the-shoulder transcript: pure first-person, timestamped think-aloud with emotion tags (🤔 😤 😀 😲 ↩️). Reads like sitting behind the user.
+- **`observer-notes.md`** — the Observer's analytical report. The top carries a **verdict**: task success, time-on-task, attempts, where they got stuck, bugs by severity, usability findings by severity, standout quotes, and what felt good.
+- **`observer-console.log`** — raw console + network errors.
 - screenshots (`01-landing.png`, …) — a dense frame at every beat, so journal + screenshots replay like a recording.
 
-`journal.md` and `notes.md` share timestamps and reference the same screenshot filenames, so any finding traces back to the exact moment the user lived it.
+`user-journal.md` and `observer-notes.md` share timestamps and reference the same screenshot filenames, so any finding traces back to the exact moment the user lived it.

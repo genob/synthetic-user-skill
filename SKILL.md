@@ -126,21 +126,21 @@ Create a run folder under the **project folder's** `reports/` (`synthetic-testin
 when one exists, else the skill's own `reports/`: `reports/<persona>-<a short slug>/`
 containing **two distinct documents** plus evidence:
 
-- **`journal.md`** — the **Participant's** over-the-shoulder transcript. Pure first-person,
+- **`user-journal.md`** — the **Participant's** over-the-shoulder transcript. Pure first-person,
   experiential, timestamped think-aloud. This is the "sitting behind the user" recording. No
   analysis, no technical jargon — just what the user thought, felt, and did, beat by beat, with
   emotion tags and screenshot references.
-- **`notes.md`** — the **Observer's** analytical report. Third-person interpretation of the
-  Participant's behavior plus the technical findings, cross-linked to `journal.md` by timestamp
+- **`observer-notes.md`** — the **Observer's** analytical report. Third-person interpretation of the
+  Participant's behavior plus the technical findings, cross-linked to `user-journal.md` by timestamp
   and to screenshots by filename. The verdict goes at the top (see below).
-- **`console.log`** — raw console + network errors captured by the Observer.
+- **`observer-console.log`** — raw console + network errors captured by the Observer.
 - screenshots (`01-landing.png`, `02-add-form.png`, …).
 
-**Cross-linking is what makes the split work:** `journal.md` and `notes.md` share timestamps,
+**Cross-linking is what makes the split work:** `user-journal.md` and `observer-notes.md` share timestamps,
 and both reference the same screenshot filenames, so any finding traces back to the exact
 moment the user lived it.
 
-The Observer writes the **verdict** at the top of `notes.md` (and summarizes it back to the
+The Observer writes the **verdict** at the top of `observer-notes.md` (and summarizes it back to the
 user):
 
 ```
@@ -150,14 +150,14 @@ Task success: ✅ / ⚠️ / ❌   ·   Time-on-task: ~Nm   ·   Attempts to suc
 
 ### 🐛 Bugs (by severity)
 - [blocker] Save silently failed — 500 on POST /equipment, no error shown; user believed it saved.
-  Evidence: 03-after-save.png, console.log:L42, journal.md @00:04:12
+  Evidence: 03-after-save.png, observer-console.log:L42, user-journal.md @00:04:12
 
 ### 😕 Usability findings (by severity)
 - [annoyance] User hunted 20s for "Add", expecting it top-right; it was a floating button bottom-left.
-  Evidence: 02-dashboard.png, journal.md @00:01:30
+  Evidence: 02-dashboard.png, user-journal.md @00:01:30
 
 ### 🗣️ Standout quotes
-- "wait, did that even save? it just… went back to the list" — journal.md @00:04:20
+- "wait, did that even save? it just… went back to the list" — user-journal.md @00:04:20
 
 ### 👍 What felt good
 - <a couple of genuine positives, in the user's voice>
@@ -170,4 +170,4 @@ didn't see it happen and capture it, don't claim it.
 
 - Close the browser (`browser_close`).
 - Summarize per-persona verdicts to the user, lead with blockers and the standout quotes, and
-  link both `journal.md` (the over-the-shoulder transcript) and `notes.md` (the analysis).
+  link both `user-journal.md` (the over-the-shoulder transcript) and `observer-notes.md` (the analysis).
