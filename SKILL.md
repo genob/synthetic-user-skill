@@ -51,6 +51,31 @@ Personas and journeys are loaded from **two** places and combined into one pool:
   folder exists.
 - When the user says "run all personas," run the union of both folders.
 
+## App-wide standing instructions (`app-guide.md`)
+
+Beyond *who* (persona) and *what* (journey), an app has **house rules that apply to every
+run**. These live in a single `app-guide.md`, loaded at the start of every session and treated
+as standing context layered *underneath* persona × journey. Look for it in the **project
+folder** first (`synthetic-testing/app-guide.md`), falling back to one next to this SKILL.md;
+if neither exists, proceed without it.
+
+What belongs in it (and what the skill should honor):
+- **Access & login quirks** — e.g. "sign in via the SSO button, not the email form."
+- **Pre-session setup** — table-stakes steps to do before the journey proper, e.g. "dismiss
+  the cookie banner and welcome modal." These are *setup*, not part of what's being evaluated.
+- **Console/network noise to ignore (Observer)** — known third-party warnings/requests that
+  are NOT bugs (analytics, Sentry, etc.). The Observer must not report these as findings.
+- **Test-data rules** — naming conventions (e.g. prefix `TEST-`), what's safe to delete, and
+  records/accounts to never touch.
+- **Out-of-bounds areas** — flows to avoid entirely (e.g. billing that charges a real card).
+- **Domain glossary & known issues** — so the Observer doesn't re-report what's already known.
+
+**Hard boundary — `app-guide.md` must NOT contain navigation hints.** It cannot tell the
+Participant where buttons/menus are or which route to visit; that would break the honest-eyes
+rule, which is the whole point. It's limited to access, setup, noise-filtering, data-safety,
+and known issues — table-stakes context and Observer-side knowledge, never a UI map. If a
+specific journey/persona instruction conflicts with the guide, the more specific one wins.
+
 ## Required inputs (fail fast if missing)
 
 Do NOT guess these. If any is unset, stop and ask the user:
@@ -84,6 +109,10 @@ dedicated test account. Still announce destructive deletes in the report so the 
 what test data was touched.
 
 ## The loop
+
+**First, once per session: load `app-guide.md`** (project folder, else next to SKILL.md) and
+hold its house rules as standing context for everything below — honoring the hard boundary
+above (no navigation hints). If none exists, continue.
 
 For each persona × journey:
 
