@@ -53,7 +53,7 @@ Beyond *who* (persona) and *what* (journey), you can give the skill **house rule
 
 ## Output
 
-Each run writes a prescriptively-named folder `reports/<persona>__<journey>__<YYYY-MM-DD>/` (e.g. `reports/confused-user__upload-receipt__2026-06-19/`; `-2`, `-3` appended on same-day repeats), containing:
+Each run writes a folder named by its **run slug** — `<persona>__<journey>__<YYYY-MM-DD>` (e.g. `reports/confused-user__upload-receipt__2026-06-19/`; `-2`, `-3` appended on same-day repeats), containing:
 
 - **`user-journal.md`** — the Participant's over-the-shoulder transcript: pure first-person, timestamped think-aloud with emotion tags (🤔 😤 😀 😲 ↩️). Reads like sitting behind the user.
 - **`observer-notes.md`** — the Observer's analytical report. The top carries a **verdict**: task success, time-on-task, attempts, where they got stuck, bugs by severity, usability findings by severity, standout quotes, and what felt good.

@@ -163,11 +163,11 @@ For each persona × journey:
 ## Evidence & output
 
 Create a run folder under the **project folder's** `reports/` (`synthetic-testing/reports/`)
-when one exists, else the skill's own `reports/`. **Name it prescriptively** — do not invent a
-freeform slug:
+when one exists, else the skill's own `reports/`. Its name is the **run slug** — build it
+prescriptively, do not invent a freeform one:
 
 ```
-reports/<persona>__<journey>__<YYYY-MM-DD>/
+reports/<run-slug>/   where  run-slug = <persona>__<journey>__<YYYY-MM-DD>
 ```
 
 - `<persona>` — the persona filename stem (e.g. `confused-user`).
@@ -179,7 +179,7 @@ reports/<persona>__<journey>__<YYYY-MM-DD>/
 - **On collision** (same persona × journey already run today), append `-2`, `-3`, … — never
   overwrite a prior run.
 
-Example: `reports/confused-user__upload-receipt__2026-06-19/`. The folder contains **two
+Example run slug: `confused-user__upload-receipt__2026-06-19`. The run folder contains **two
 distinct documents** plus evidence:
 
 - **`user-journal.md`** — the **Participant's** over-the-shoulder transcript. Pure first-person,
