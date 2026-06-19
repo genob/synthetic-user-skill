@@ -163,8 +163,24 @@ For each persona × journey:
 ## Evidence & output
 
 Create a run folder under the **project folder's** `reports/` (`synthetic-testing/reports/`)
-when one exists, else the skill's own `reports/`: `reports/<persona>-<a short slug>/`
-containing **two distinct documents** plus evidence:
+when one exists, else the skill's own `reports/`. **Name it prescriptively** — do not invent a
+freeform slug:
+
+```
+reports/<persona>__<journey>__<YYYY-MM-DD>/
+```
+
+- `<persona>` — the persona filename stem (e.g. `confused-user`).
+- `<journey>` — the journey filename stem (e.g. `upload-receipt`); use `default-goal` when no
+  journey was given.
+- `<YYYY-MM-DD>` — today's date.
+- Segments are joined with **double underscores** (`__`) so the single-hyphen names inside each
+  segment stay unambiguous.
+- **On collision** (same persona × journey already run today), append `-2`, `-3`, … — never
+  overwrite a prior run.
+
+Example: `reports/confused-user__upload-receipt__2026-06-19/`. The folder contains **two
+distinct documents** plus evidence:
 
 - **`user-journal.md`** — the **Participant's** over-the-shoulder transcript. Pure first-person,
   experiential, timestamped think-aloud. This is the "sitting behind the user" recording. No
