@@ -20,7 +20,6 @@ A key rule is the **honest-eyes rule**: the Participant navigates using only wha
 | `SKILL.md` | The skill definition Claude Code loads. |
 | `personas/` | Default personas (`new-user`, `confused-user`, `power-user`). |
 | `journeys/` | Default journeys + `_template.md`. |
-| `app-guide.md` | App-wide standing instructions applied to every run (template). |
 | `artifacts/` | Real files personas can upload (photos, receipts, PDFs). |
 | `reports/` | Run output: notes, screenshots, console logs. |
 | `.env.example` | Template for credentials — copy to `.env.local` (gitignored). |
@@ -36,9 +35,9 @@ On a name collision, the **project folder wins**. Credentials, artifacts, and re
 
 ### App-wide standing instructions (`app-guide.md`)
 
-Beyond *who* (persona) and *what* (journey), you can give the skill **house rules that apply to every run** — access/login quirks, pre-session setup (dismiss the cookie banner), console noise the Observer should ignore, test-data rules (prefix `TEST-`, what's safe to delete), out-of-bounds flows, a domain glossary, and known issues. Drop them in `synthetic-testing/app-guide.md` (project wins) or the skill's own `app-guide.md`; it's loaded once at the start of every session.
+Beyond *who* (persona) and *what* (journey), you can give the skill **house rules that apply to every run** — access/login quirks, pre-session setup (dismiss the cookie banner), console noise the Observer should ignore, test-data rules (prefix `TEST-`, what's safe to delete), out-of-bounds flows, a domain glossary, and known issues. Drop them in your project's `synthetic-testing/app-guide.md`; it's loaded once at the start of every session. The skill ships no app-guide of its own — it's inherently app-specific — so if you don't create one, runs just proceed without it (ask the skill to scaffold one and it will).
 
-> **Boundary:** `app-guide.md` must **not** contain navigation hints ("the Add button is top-right") — that would break the honest-eyes rule. It's limited to access, setup, noise-filtering, data-safety, and known issues. See the shipped `app-guide.md` template for the structure.
+> **Boundary:** `app-guide.md` must **not** contain navigation hints ("the Add button is top-right") — that would break the honest-eyes rule. It's limited to access, setup, noise-filtering, data-safety, and known issues. The structure (sections to fill in) is documented in `SKILL.md`.
 
 ## Setup
 

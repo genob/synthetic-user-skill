@@ -54,10 +54,11 @@ Personas and journeys are loaded from **two** places and combined into one pool:
 ## App-wide standing instructions (`app-guide.md`)
 
 Beyond *who* (persona) and *what* (journey), an app has **house rules that apply to every
-run**. These live in a single `app-guide.md`, loaded at the start of every session and treated
-as standing context layered *underneath* persona × journey. Look for it in the **project
-folder** first (`synthetic-testing/app-guide.md`), falling back to one next to this SKILL.md;
-if neither exists, proceed without it.
+run**. These live in a single `app-guide.md` **in the project folder**
+(`synthetic-testing/app-guide.md`), loaded at the start of every session and treated as
+standing context layered *underneath* persona × journey. The skill does **not** ship its own
+app-guide — it's inherently app-specific. If the project folder has no `app-guide.md`, proceed
+without one (and you may offer to scaffold one for the user from the structure below).
 
 What belongs in it (and what the skill should honor):
 - **Access & login quirks** — e.g. "sign in via the SSO button, not the email form."
@@ -110,9 +111,10 @@ what test data was touched.
 
 ## The loop
 
-**First, once per session: load `app-guide.md`** (project folder, else next to SKILL.md) and
-hold its house rules as standing context for everything below — honoring the hard boundary
-above (no navigation hints). If none exists, continue.
+**First, once per session: load `app-guide.md`** from the project folder
+(`synthetic-testing/app-guide.md`) if present, and hold its house rules as standing context
+for everything below — honoring the hard boundary above (no navigation hints). If there's
+none, continue without it.
 
 For each persona × journey:
 
